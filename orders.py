@@ -1,10 +1,9 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
+from entry_generator import EntryGenerator
 
 class Orders(ctk.CTk):
-
-
     def __init__(self, dishes):
         super().__init__()
         self.title('CDS control de ventas')
@@ -21,8 +20,10 @@ class Orders(ctk.CTk):
         # Frame superior
         self.frame_superior = ctk.CTkFrame(self)
         self.frame_superior.grid(row = 0, column = 0)
+        # Frame intermedio
         self.frame_inter = ctk.CTkFrame(self)
         self.frame_inter.grid(row = 1, column = 0)
+        # Frame inferior
         self.frame_inferior = ctk.CTkFrame(self)
         self.frame_inferior.grid(row = 2, column = 0)
 
@@ -47,7 +48,7 @@ class Orders(ctk.CTk):
         self.style.map("Treeview.Heading",
                   background=[('active', '#3484F0')])
         
-        # Labels
+        # Labels datos
         self.label_name = ctk.CTkLabel(self.frame_superior, text='Nombre/alias:')
         self.label_dir = ctk.CTkLabel(self.frame_superior, text='Dirección:')
         self.label_tel = ctk.CTkLabel(self.frame_superior, text='Teléfono:')
@@ -56,7 +57,7 @@ class Orders(ctk.CTk):
         self.label_dir.grid(row=1, column=0, padx=10, pady=10)
         self.label_tel.grid(row=2, column=0, padx=10, pady=10)
 
-        # Entry
+        # Entries datos
         self.entry_name = ctk.CTkEntry(self.frame_superior)
         self.entry_dir = ctk.CTkEntry(self.frame_superior)
         self.entry_tel = ctk.CTkEntry(self.frame_superior)
@@ -76,25 +77,18 @@ class Orders(ctk.CTk):
         self.tree = tk.ttk.Treeview(self.frame_inferior, columns = self.headers, show = 'headings')
         for head in self.headers:
             self.tree.heading(head, text = head)
+
+        # Entries para ingresar cantidad de platillos en pedidos
+        self.entries_dish = EntryGenerator(self.frame_inter, list(self.dishes.keys()))
        
 
         self.tree.pack(expand = True, fill = 'both')
-
-        self.create_label_entries()
 
         self.mainloop()
 
     def add_dishes(self):
         pass
 
-    def create_label_entries(self):
-        for dish in list(self.dishes.keys()):
-            label = tk.Label(self.frame_inter, text=dish)
-            yield label
-            yield label.pack()
-            entry = tk.Entry(self.frame_inter)
-            yield entry 
-            yield entry.pack()
 
 if __name__ == '__main__':
     platillos = {'Pollo en salsa verde' : 35, 'Caldo de res' : 35, 'Pozole' : 35, 'Carne a la jardinera' : 35, 
