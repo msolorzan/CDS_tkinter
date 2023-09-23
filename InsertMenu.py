@@ -12,7 +12,7 @@ class InsertMenu(ctk.CTk):
 
             self.tree.insert('', 0, values = (self.dish, self.quantity))
             # Configurar el estilo de la fila recién insertada
-            self.tree.tag_configure("custom_font", font=("Calibri", 15))
+            self.tree.tag_configure("custom_font", font=("Calibri", 17))
             # Aplicar el estilo a la fila recién insertada
             self.tree.item(self.tree.get_children()[0], tags=("custom_font"))
 
@@ -23,11 +23,16 @@ class InsertMenu(ctk.CTk):
 
         except:
             tk.messagebox.showerror(title='Error', message='Ingrese una cantidad válida')
-        
+
+        def delete_item(self):
+            pass
 
     def finish(self):
-        self.destroy()
-        Orders(self.dishes)
+        if len(self.dishes) > 0:
+            self.destroy()
+            Orders(self.dishes)
+        else:
+            tk.messagebox.showerror(title='Error', message='Ingrese por lo menos un platillo y su cantidad')
 
     def __init__(self):
         super().__init__()
@@ -74,7 +79,8 @@ class InsertMenu(ctk.CTk):
         self.entry_num = ctk.CTkEntry(self.frame_superior)
 
         self.button_insert = ctk.CTkButton(self.frame_superior, text = 'Insertar platillo', command = self.insert_dish)
-        self.button_finish = ctk.CTkButton(self.frame_superior, text = 'Terminar', fg_color = 'red', hover_color = '#974040', command = self.finish)
+        self.button_remove = ctk.CTkButton(self.frame_superior, text = 'Eliminar elemento', fg_color = 'red', hover_color = '#974040')
+        self.button_finish = ctk.CTkButton(self.frame_superior, text = 'Terminar', fg_color = 'green', hover_color = '#1C5E46', command = self.finish)
 
         self.headers = ['Platillo', 'Cantidad']
         self.tree = tk.ttk.Treeview(self.frame_inferior, columns = self.headers, show = 'headings')
@@ -88,7 +94,8 @@ class InsertMenu(ctk.CTk):
         self.label_num.pack(pady = 2)
         self.entry_num.pack(pady = 2)
         self.button_insert.pack(padx = 5, pady = 20, side = 'left')
-        self.button_finish.pack(padx = 5, pady = 20, side = 'right')
+        self.button_remove.pack(padx = 5, pady = 20, side = 'left')
+        self.button_finish.pack(padx = 5, pady = 20, side = 'left')
 
 
         self.tree.pack(expand = True, fill = 'both')
