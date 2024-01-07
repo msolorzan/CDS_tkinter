@@ -19,8 +19,6 @@ class Login(ctk.CTk):
         self.geometry('800x600')
         self.resizable(False, False)
 
-            
-
         self.columnconfigure(0, weight = 1, uniform = 'a')
         self.columnconfigure(1, weight = 1, uniform = 'a')
         self.rowconfigure(0, weight = 1, uniform = 'a')
@@ -51,9 +49,7 @@ class Login(ctk.CTk):
         self.button_session.grid(row = 6, column = 0, sticky = 's')
         self.label_color.pack(expand = True, fill = 'both')
         self.bind('<Return>', func = (lambda event: self.login()))
-
         self.mainloop()
 
 if __name__ == '__main__':
     Login()
-

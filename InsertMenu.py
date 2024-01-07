@@ -8,13 +8,16 @@ class InsertMenu(ctk.CTk):
         try:
             self.quantity = int(self.entry_num.get())
             self.dish = self.entry_name.get()
-            self.dishes[self.dish] = self.quantity
+            if len(self.dish) == 0:
+                tk.messagebox.showerror(title='Error', message='Ingrese un nombre de platillo válida')
+            else:
+                self.dishes[self.dish] = self.quantity
 
-            self.tree.insert('', 0, values = (self.dish, self.quantity))
-            # Configurar el estilo de la fila recién insertada
-            self.tree.tag_configure("custom_font", font=("Calibri", 15))
-            # Aplicar el estilo a la fila recién insertada
-            self.tree.item(self.tree.get_children()[0], tags=("custom_font"))
+                self.tree.insert('', 0, values = (self.dish, self.quantity))
+                # Configurar el estilo de la fila recién insertada
+                self.tree.tag_configure("custom_font", font=("Calibri", 15))
+                # Aplicar el estilo a la fila recién insertada
+                self.tree.item(self.tree.get_children()[0], tags=("custom_font"))
 
             # Limpiar los campos y posicionar el cursor en entry_name
             self.entry_name.delete(0, tk.END)
