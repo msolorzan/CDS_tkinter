@@ -1,4 +1,4 @@
-import customtkinter as ctk
+'''import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
 from entry_generator import EntryGenerator
@@ -94,4 +94,4 @@ if __name__ == '__main__':
     platillos = {'Pollo en salsa verde' : 35, 'Caldo de res' : 35, 'Pozole' : 35, 'Carne a la jardinera' : 35, 
                  'Costillas a la BBQ' : 35, 'Papas horneadas rellenas' : 35, 'Caldo de pescado': 35,
                  'Calbacitas a la mexicana' : 35, 'Pollo empanizado' : 35, 'Carne de res empanizada' : 35}
-    Orders(platillos)
+    Orders(platillos)'''

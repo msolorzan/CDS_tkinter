@@ -1,55 +1,117 @@
-import tkinter as tk
-import customtkinter as ctk
-from InsertMenu import *
+import sys
+from PyQt6.QtWidgets import (QApplication,QLabel,
+QWidget, QLineEdit, QPushButton,QMessageBox, QCheckBox)
+from PyQt6.QtGui import QFont
 
-class Login(ctk.CTk):
+from registration import view_user_register
+from main import MainWindow
 
-    def login(self):
-        user_name = self.entry_user.get()
-        password = self.entry_password.get()
-        if user_name == 'Mikessxx' and password == '12345':
-            self.destroy()
-            InsertMenu()
-        else:
-            tk.messagebox.showerror(title='Error', message='Usuario o contraseña incorrecto')
+class Login(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.title('Inicio de sesión')
-        self.geometry('800x600')
-        self.resizable(False, False)
+        self.initialize_ui()
+    
+    def initialize_ui(self):
+        self.setGeometry(100,100,400,300)
+        self.setWindowTitle("Inicio de sesión")
+        self.form_generate()
+        self.show()
 
-        self.columnconfigure(0, weight = 1, uniform = 'a')
-        self.columnconfigure(1, weight = 1, uniform = 'a')
-        self.rowconfigure(0, weight = 1, uniform = 'a')
+    def form_generate(self):
+        self.is_logged = False
 
-        self.left_frame = ctk.CTkFrame(self)
-        self.right_frame = ctk.CTkFrame(self)
+        user_label = QLabel(self)
+        user_label.setText("Usuario:")
+        user_label.setFont(QFont("Arial",10))
+        user_label.move(20,54)
 
-        self.left_frame.columnconfigure(0, weight = 1, uniform = 'a')
-        self.left_frame.rowconfigure((0, 1, 2, 3, 4, 5, 6, 7), weight = 1, uniform = 'a')
+        self.user_input = QLineEdit(self)
+        self.user_input.resize(250,24)
+        self.user_input.move(100,50)
 
-        self.label_user = ctk.CTkLabel(self.left_frame, text = 'Usuario')
-        self.entry_user = ctk.CTkEntry(self.left_frame)
+        password_label = QLabel(self)
+        password_label.setText("Contraseña:")
+        password_label.setFont(QFont("Arial",10))
+        password_label.move(20,86)
+
+        self.password_input = QLineEdit(self)
+        self.password_input.resize(250,24)
+        self.password_input.move(100,82)
+        self.password_input.setEchoMode(
+            QLineEdit.EchoMode.Password)
         
-        self.label_password = ctk.CTkLabel(self.left_frame, text = 'Contraseña')
-        self.entry_password = ctk.CTkEntry(self.left_frame)
+        self.check_view_password = QCheckBox(self)
+        self.check_view_password.setText("Ver contraseña")
+        self.check_view_password.move(90,110)
+        self.check_view_password.toggled.connect(self.show_password)
 
-        self.button_session = ctk.CTkButton(self.left_frame, text = 'Iniciar sesión', command = self.login)
+        login_button = QPushButton(self)
+        login_button.setText("Ingresa")
+        login_button.resize(320,34)
+        login_button.move(20,140)
+        login_button.clicked.connect(self.user_login)
 
-        self.label_color = ctk.CTkLabel(self.right_frame, bg_color = '#F3BA48', text = None)
+        register_button = QPushButton(self)
+        register_button.setText("Registrate")
+        register_button.resize(320,34)
+        register_button.move(20,180)
+        register_button.clicked.connect(self.user_register)
+    
+    def show_password(self,clicked):
+        if clicked:
+            self.password_input.setEchoMode(
+                QLineEdit.EchoMode.Normal)
+        else:
+            self.password_input.setEchoMode(
+                QLineEdit.EchoMode.Password)
+    
+    def user_login(self):
+        users = []
+        users_path = "users.txt"
 
-        self.left_frame.grid(row = 0, column = 0, sticky = 'nsew')
-        self.right_frame.grid(row = 0, column = 1, sticky = 'nsew')
-        self.label_user.grid(row = 2, column = 0, sticky = 's')
-        self.entry_user.grid(row = 3, column = 0, sticky = 'n')
-        self.label_password.grid(row = 4, column = 0, sticky = 's')
-        self.entry_password.grid(row = 5, column = 0, sticky = 'n')
-        self.entry_password.configure(show = '*')
-        self.button_session.grid(row = 6, column = 0, sticky = 's')
-        self.label_color.pack(expand = True, fill = 'both')
-        self.bind('<Return>', func = (lambda event: self.login()))
-        self.mainloop()
+        try:
+            with open(users_path, "r") as f:
+                for line in f:
+                    users.append(line.strip("\n"))
+            login_information = f"{self.user_input.text()},{self.password_input.text()}"
 
-if __name__ == '__main__':
-    Login()
+            if login_information in users:
+                QMessageBox.information(self,"Inicio de sesión",
+                "Inicio de sesión exitoso",
+                QMessageBox.StandardButton.Ok,
+                QMessageBox.StandardButton.Ok)
+                self.is_logged = True
+                self.close()
+                self.open_main_window()
+            
+            else:
+                QMessageBox.warning(self, "Mensaje de error",
+                "Usuario o contraseña incorrectos",
+                QMessageBox.StandardButton.Close,
+                QMessageBox.StandardButton.Close)
+
+        except FileNotFoundError as e:
+            QMessageBox.warning(self, "Mensaje de error",
+            "Base de datos de usuarios no encontrada: {e}",
+            QMessageBox.StandardButton.Close,
+            QMessageBox.StandardButton.Close)
+
+        except Exception as e:
+            QMessageBox.warning(self, "Mensaje de error",
+            "Error en el servidor",
+            QMessageBox.StandardButton.Close,
+            QMessageBox.StandardButton.Close)
+
+    def user_register(self):
+        self.new_user = view_user_register()
+        self.new_user.show()
+
+    def open_main_window(self):
+        self.main_window = MainWindow()
+        self.main_window.show()
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    login = Login()
+    sys.exit(app.exec())

@@ -1,4 +1,11 @@
-import tkinter as tk
+from PyQt6.QtWidgets import (QDialog, QLabel,
+QPushButton,QLineEdit,QMessageBox)
+from PyQt6.QtGui import QFont
+
+class view_order_register(QDialog):
+    pass
+
+''' import tkinter as tk
 import customtkinter as ctk
 
 class EntryGenerator(ctk.CTk):
@@ -24,4 +31,4 @@ if __name__ == '__main__':
     root_window = ctk.CTk()
     labels = ["Label 1:", "Label 2:", "Label 3:", "Label 4:", "Label 5:"]
     generator = EntryGenerator(root_window, labels)
-    generator.start()
+    generator.start()'''
